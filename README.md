@@ -1,0 +1,182 @@
+# Kouprey-Zip  v1.3
+
+A modern file archiver with a WinUI 3-inspired design. Built with Python and PyQt6. Supports **Windows** and **Linux**.
+
+## Features
+
+- **Compress** files/folders into multiple archive formats with optional password encryption
+- **Extract** archives with full folder navigation and single-item extraction
+- **Encrypt & Decrypt** text and files using AES-256-GCM
+- **Archive Viewer** — browse archive contents with folder tree navigation, file type icons, and context menu actions (Open, Copy, Delete, Extract Item)
+- **Drag & Drop** support throughout
+- **Shell Integration** — right-click context menu on Windows; `.kpz` file association on Linux
+- **Dark/Light theme** with WinUI 3 color tokens
+- **Khmer & English** language support
+- **Single-instance IPC** — multiple file operations merge into one window
+
+## Supported Formats
+
+| Format | Compress | Extract | Encrypted |
+|--------|----------|---------|-----------|
+| KPZ (native) | ✓ | ✓ | ✓ |
+| ZIP | ✓ | ✓ | ✓ |
+| 7z | ✓ | ✓ | ✓ |
+| RAR | ✓ | ✓ | ✓ |
+| TAR | ✓ | ✓ | ✗ |
+| TAR.GZ | ✓ | ✓ | ✗ |
+| TAR.BZ2 | ✓ | ✓ | ✗ |
+| TAR.XZ | ✓ | ✓ | ✗ |
+| TAR.ZST | ✓ | ✓ | ✗ |
+| BZ2 | ✓ | ✓ | ✗ |
+| ISO | ✗ | ✓ | ✗ |
+
+## Installation
+
+### Linux — one-line installer (no root required)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/agentosroza-dev/kouprey-zip/main-linux/install.sh | bash
+```
+
+To uninstall:
+```bash
+curl -fsSL https://raw.githubusercontent.com/agentosroza-dev/kouprey-zip/main-linux/install.sh | bash -s -- --uninstall -y
+```
+
+The installer downloads the pre-built binary from the latest GitHub release. If no
+release is available for your architecture, it falls back to cloning from the
+`main-linux` branch and installing from source into a Python virtual environment.
+
+#### Supported distributions
+
+The installer auto-detects your distribution and provides distro-specific
+instructions for any missing system dependencies:
+
+| Distribution | Package manager | Qt dependency package(s) |
+|-------------|----------------|--------------------------|
+| Debian, Ubuntu, Zorin, Linux Mint, Pop!_OS | `apt` | `libxcb-cursor0 libxcb-xinerama0 libxcb-xkb1 libxkbcommon-x11-0` |
+| Fedora, RHEL, CentOS | `dnf` / `yum` | `libxcb-cursor libxcb xcb-util xcb-util-image xcb-util-keysyms xcb-util-wm` |
+| openSUSE | `zypper` | `libxcb-cursor0 libxcb-xinerama0` |
+| Arch Linux, Manjaro, EndeavourOS | `pacman` | `libxcb-cursor xcb-util xcb-util-wm` |
+| Alpine Linux | `apk` | `libxcb-dev libxcb-cursor-dev` |
+| Void Linux | `xbps-install` | `libxcb-cursor` |
+| Gentoo | `emerge` | `x11-libs/libxcb` |
+| NixOS | `nix-env` | `libxcb` |
+| FreeBSD | `pkg` | `libxcb` |
+
+#### Files installed
+
+| Step | Destination |
+|------|-------------|
+| Download pre-built binary | `~/.local/share/kouprey-zip/` |
+| Create CLI launcher | `~/.local/bin/kouprey-zip` |
+| Install `.desktop` entry | `~/.local/share/applications/kouprey-zip.desktop` |
+| Register `.kpz` MIME type | `~/.local/share/mime/packages/application-x-kouprey-zip.xml` |
+| Install app icons | `~/.local/share/icons/hicolor/*/*/` |
+| Thunar send-to entry | `~/.local/share/Thunar/sendto/thunar-sendto-kouprey.desktop` |
+
+#### Requirements
+
+- **curl** or **wget** — for downloading
+- **Python 3.12+** (required if no pre-built binary is available)
+- **git** (required if no pre-built binary is available)
+- **`python3-venv`** — auto-detected; the installer suggests the correct package name for your distro (e.g. `python3.12-venv` on Debian/Ubuntu, `python-virtualenv` on Arch, `py3-virtualenv` on Alpine)
+- **`update-mime-database`** (`shared-mime-info` package) — optional, for `.kpz` file association
+
+#### After installation
+
+- Run `kouprey-zip` from the terminal
+- Double-click any `.kpz` file to open it in the archive viewer
+- If `~/.local/bin` is not in your `PATH`, add this line to your shell rc file:
+  ```bash
+  export PATH="$PATH:$HOME/.local/bin"
+  ```
+
+### Windows — from source
+
+#### Requirements
+- Python 3.12+
+
+```powershell
+git clone https://github.com/agentosroza-dev/kouprey-zip.git --branch main-linux
+cd kouprey-zip
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python main.py
+```
+
+### Windows — build executable
+
+```powershell
+.\build.ps1
+```
+
+Creates a standalone `.exe` in `dist/Kouprey-Zip/` via PyInstaller. Optionally run with `-Install` to create an InnoSetup installer.
+
+## Usage
+
+### GUI
+```bash
+kouprey-zip          # Linux (after install)
+python main.py       # Windows / from source
+```
+
+### CLI commands
+| Flag | Description |
+|------|-------------|
+| `--compress file1 file2 ...` | Pre-load files/folders into the compress page |
+| `--open archive.kpz` | Pre-open an archive in the viewer |
+| `--extract archive.zip` | Pre-select an archive for extraction |
+| `--quick-compress file1 ...` | Compress to `.kpz` in the same directory (no GUI) |
+| `--quick-extract-here archive.zip` | Extract to current directory (no GUI) |
+| `--quick-extract-to archive.zip` | Extract to a subfolder (no GUI) |
+
+### Shell integration
+
+**Windows:** Register the app in the right-click menu via Settings → Integration → Register.
+
+**Linux:** `.kpz` files are automatically associated after running `install.sh`. Other archive formats (`.zip`, `.7z`, etc.) can be associated manually via the desktop environment's file manager settings.
+
+## Project structure
+```
+kouprey-zip/
+├── main.py                  # Entry point, CLI, IPC
+├── app_config.py            # Settings load/save
+├── install.sh               # Linux curl installer (no root)
+├── build.sh                 # Linux PyInstaller build script
+├── kouprey-zip              # Development launcher (auto-detects .venv)
+├── installer/
+│   └── kouprey-zip.desktop  # Linux desktop entry
+├── core/                    # Backend
+│   ├── archive.py           # Archive entry listing
+│   ├── compressor.py        # Compression engine
+│   ├── extractor.py         # Extraction engine
+│   ├── encryptor.py         # AES-256-GCM encryption
+│   ├── formats.py           # Format definitions
+│   ├── icons.py             # Lucide SVG icon rendering
+│   ├── theme.py             # WinUI 3 color themes
+│   ├── language.py          # i18n / l10n
+│   ├── registry.py          # Windows shell context menu
+│   └── auth.py              # .env loader
+├── ui/                      # PyQt6 pages
+│   ├── main_window.py       # Main window, nav panel
+│   ├── compress_page.py     # Compress file list
+│   ├── archive_page.py      # Archive viewer
+│   ├── extract_page.py      # Extraction page
+│   ├── encrypt_page.py      # Encrypt/Decrypt
+│   ├── settings_page.py     # Settings with sub-pages
+│   └── about_dialog.py      # About dialog
+├── tools/
+│   ├── file_utils.py        # Size formatting
+│   └── format_detector.py   # Magic byte detection
+├── assets/
+│   ├── lang/                # en.json, km.json
+│   ├── fonts/               # AgentosUI font family
+│   ├── icons/               # PNG icons for Linux desktop integration
+│   └── app.ico
+├── build.ps1                # Windows PyInstaller build
+├── kouprey_context.reg      # Windows context menu registration
+```
+
+## Credits
+
+Created by Agentos. Uses [Lucide](https://lucide.dev/) icons and [WinUI 3](https://docs.microsoft.com/en-us/windows/apps/winui/) color system.
