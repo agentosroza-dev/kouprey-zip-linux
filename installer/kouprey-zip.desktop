@@ -1,0 +1,30 @@
+[Desktop Entry]
+Type=Application
+Name=Kouprey-Zip
+GenericName=File Archiver
+Comment=A modern file archiver
+Exec=kouprey-zip --open %f
+TryExec=kouprey-zip
+Icon=kouprey-zip
+Terminal=false
+Categories=Utility;Archiving;Compression;
+MimeType=application/x-kouprey-zip;inode/directory;
+StartupNotify=true
+StartupWMClass=Kouprey-Zip
+Actions=Compress;ExtractHere;ExtractTo;QuickKPZ;
+
+[Desktop Action Compress]
+Name=Add Archive with Kouprey
+Exec=kouprey-zip --compress %F
+
+[Desktop Action ExtractHere]
+Name=Extract Here
+Exec=kouprey-zip --quick-extract-here %f
+
+[Desktop Action ExtractTo]
+Name=Extract to Folder
+Exec=kouprey-zip --quick-extract-to %f
+
+[Desktop Action QuickKPZ]
+Name=Create *.kpz
+Exec=kouprey-zip --quick-compress %F

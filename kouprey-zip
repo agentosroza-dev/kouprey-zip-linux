@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Development launcher — auto-detects .venv and runs Kouprey-Zip
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [[ -f "${SCRIPT_DIR}/.venv/bin/python3" ]]; then
+    PYTHON="${SCRIPT_DIR}/.venv/bin/python3"
+elif [[ -f "${SCRIPT_DIR}/.venv/bin/python" ]]; then
+    PYTHON="${SCRIPT_DIR}/.venv/bin/python"
+elif [[ -f "${SCRIPT_DIR}/venv/bin/python3" ]]; then
+    PYTHON="${SCRIPT_DIR}/venv/bin/python3"
+elif [[ -f "${SCRIPT_DIR}/venv/bin/python" ]]; then
+    PYTHON="${SCRIPT_DIR}/venv/bin/python"
+else
+    PYTHON="python3"
+fi
+
+exec "${PYTHON}" "${SCRIPT_DIR}/main.py" "$@"
